@@ -2,8 +2,8 @@ package service
 
 import (
 	"github.com/zenorachi/literature-list/internal/models"
-	"github.com/zenorachi/literature-list/pkg/clients/cyberleninka"
-	"github.com/zenorachi/literature-list/pkg/clients/elibrary"
+	"github.com/zenorachi/literature-list/pkg/client/cyberleninka"
+	"github.com/zenorachi/literature-list/pkg/client/elibrary"
 )
 
 type IService interface {

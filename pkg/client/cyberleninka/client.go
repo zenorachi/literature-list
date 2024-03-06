@@ -1,19 +1,16 @@
-package elibrary
+package cyberleninka
 
 import (
-	"github.com/zenorachi/literature-list/pkg/clients/models"
+	c "github.com/zenorachi/literature-list/pkg/client"
+	"github.com/zenorachi/literature-list/pkg/client/models"
 	"net/http"
 )
-
-type IClient interface {
-	SearchLiterature(literatureList []string) ([]models.LiteratureList, error)
-}
 
 type client struct {
 	client *http.Client
 }
 
-func NewClient() IClient {
+func NewClient() c.IClient {
 	return &client{
 		client: &http.Client{},
 	}
