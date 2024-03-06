@@ -3,19 +3,19 @@ package cyberleninka
 import (
 	c "github.com/zenorachi/literature-list/pkg/client"
 	"github.com/zenorachi/literature-list/pkg/client/models"
-	"net/http"
+	"time"
 )
 
-type client struct {
-	client *http.Client
+type Client struct {
+	client *c.BaseClient
 }
 
-func NewClient() c.IClient {
-	return &client{
-		client: &http.Client{},
+func NewClient(baseUrl string, timeout time.Duration) c.IClient {
+	return &Client{
+		client: c.New(baseUrl, timeout),
 	}
 }
 
-func (c client) SearchLiterature(literatureList []string) ([]models.LiteratureList, error) {
+func (c *Client) SearchLiterature(literatureList []string) ([]models.LiteratureList, error) {
 	panic("implement me")
 }
