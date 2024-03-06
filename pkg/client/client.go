@@ -1,9 +1,10 @@
 package client
 
 import (
-	"encoding/json"
+	"bytes"
 	"fmt"
 	"github.com/zenorachi/literature-list/pkg/client/models"
+	"io"
 	"net/http"
 	"strings"
 	"time"
@@ -12,7 +13,7 @@ import (
 const DefaultTimeout = 10 * time.Second
 
 type IClient interface {
-	SearchLiterature(literatureList []string) ([]models.LiteratureList, error)
+	SearchLiterature(endpoint string, literatureList []string) ([]models.LiteratureList, error)
 }
 
 type BaseClient struct {
@@ -29,13 +30,16 @@ func New(baseURL string, timeout time.Duration) *BaseClient {
 	}
 }
 
-func (c *BaseClient) Get(endpoint string) ([]byte, error) {
-	response, err := c.client.Get(fmt.Sprintf("%s/%s", c.baseURL, strings.TrimPrefix(endpoint, "/")))
+func (c *BaseClient) Post(endpoint string, body []byte) ([]byte, error) {
+	response, err := c.client.Post(
+		fmt.Sprintf("%s/%s", c.baseURL, strings.TrimPrefix(endpoint, "/")),
+		"application/json",
+		bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err
 	}
 
 	defer func() { _ = response.Body.Close() }()
 
-	return json.Marshal(response.Body)
+	return io.ReadAll(response.Body)
 }

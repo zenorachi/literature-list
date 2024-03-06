@@ -16,6 +16,6 @@ func NewClient(baseUrl string, timeout time.Duration) c.IClient {
 	}
 }
 
-func (c *Client) SearchLiterature(literatureList []string) ([]models.LiteratureList, error) {
+func (c *Client) SearchLiterature(endpoint string, literatureList []string) ([]models.LiteratureList, error) {
 	panic("implement me")
 }

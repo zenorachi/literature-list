@@ -10,8 +10,10 @@ import (
 )
 
 type Config struct {
-	HTTP HTTPConfig
-	GIN  GINConfig
+	HTTP               HTTPConfig
+	GIN                GINConfig
+	CyberleninkaClient ClientConfig
+	ELibraryClient     ClientConfig
 }
 
 type (
@@ -25,6 +27,11 @@ type (
 
 	GINConfig struct {
 		Mode string
+	}
+
+	ClientConfig struct {
+		BaseURL string
+		Timeout time.Duration
 	}
 )
 

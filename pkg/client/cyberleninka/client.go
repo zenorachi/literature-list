@@ -1,8 +1,10 @@
 package cyberleninka
 
 import (
+	"encoding/json"
 	c "github.com/zenorachi/literature-list/pkg/client"
 	"github.com/zenorachi/literature-list/pkg/client/models"
+	"sync"
 	"time"
 )
 
@@ -16,6 +18,48 @@ func NewClient(baseUrl string, timeout time.Duration) c.IClient {
 	}
 }
 
-func (c *Client) SearchLiterature(literatureList []string) ([]models.LiteratureList, error) {
-	panic("implement me")
+func (c *Client) SearchLiterature(endpoint string, literatureList []string) ([]models.LiteratureList, error) {
+	var (
+		wg      = &sync.WaitGroup{}
+		resChan = make(chan models.LiteratureList, len(literatureList))
+		result  = make([]models.LiteratureList, 0, len(literatureList))
+	)
+
+	for _, title := range literatureList {
+		wg.Add(1)
+		go func(t string) {
+			defer wg.Done()
+			res, _ := c.getOneArticle(endpoint, t)
+			resChan <- res
+		}(title)
+	}
+
+	go func() {
+		wg.Wait()
+		close(resChan)
+	}()
+
+	for v := range resChan {
+		result = append(result, v)
+	}
+
+	return result, nil
+}
+
+func (c *Client) getOneArticle(endpoint string, title string) (models.LiteratureList, error) {
+	req := models.CyberleninkaRequest{
+		Mode: models.Mode,
+		Size: models.Size,
+		Q:    title,
+	}
+	jsonReq, _ := json.Marshal(req)
+
+	var res models.CyberleninkaResponse
+	body, _ := c.client.Post(endpoint, jsonReq)
+	_ = json.Unmarshal(body, &res)
+
+	return models.LiteratureList{
+		Title:       title,
+		IsContained: res.Found > 0,
+	}, nil
 }
