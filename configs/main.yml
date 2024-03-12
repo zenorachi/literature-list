@@ -1,0 +1,6 @@
+http:
+  host: todo-app
+  port: 8080
+  readTimeout: 10s
+  writeTimeout: 10s
+  shutdownTimeout: 5s

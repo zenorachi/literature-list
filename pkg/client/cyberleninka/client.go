@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	c "github.com/zenorachi/literature-list/pkg/client"
 	"github.com/zenorachi/literature-list/pkg/client/models"
-	"sync"
+	"golang.org/x/sync/errgroup"
 	"time"
 )
 
@@ -20,33 +20,36 @@ func NewClient(baseUrl string, timeout time.Duration) c.IClient {
 
 func (c *Client) SearchLiterature(endpoint string, literatureList []string) ([]models.LiteratureList, error) {
 	var (
-		wg      = &sync.WaitGroup{}
-		resChan = make(chan models.LiteratureList, len(literatureList))
+		eg      = &errgroup.Group{}
+		resChan = make(chan *models.LiteratureList, len(literatureList))
 		result  = make([]models.LiteratureList, 0, len(literatureList))
 	)
 
 	for _, title := range literatureList {
-		wg.Add(1)
-		go func(t string) {
-			defer wg.Done()
-			res, _ := c.getOneArticle(endpoint, t)
+		title := title
+		eg.Go(func() error {
+			res, err := c.getOneArticle(endpoint, title)
 			resChan <- res
-		}(title)
+
+			return err
+		})
 	}
 
 	go func() {
-		wg.Wait()
+		if err := eg.Wait(); err != nil {
+			//logger.Error(err)
+		}
 		close(resChan)
 	}()
 
 	for v := range resChan {
-		result = append(result, v)
+		result = append(result, *v)
 	}
 
 	return result, nil
 }
 
-func (c *Client) getOneArticle(endpoint string, title string) (models.LiteratureList, error) {
+func (c *Client) getOneArticle(endpoint string, title string) (*models.LiteratureList, error) {
 	req := models.CyberleninkaRequest{
 		Mode: models.Mode,
 		Size: models.Size,
@@ -55,10 +58,16 @@ func (c *Client) getOneArticle(endpoint string, title string) (models.Literature
 	jsonReq, _ := json.Marshal(req)
 
 	var res models.CyberleninkaResponse
-	body, _ := c.client.Post(endpoint, jsonReq)
-	_ = json.Unmarshal(body, &res)
+	body, err := c.client.Post(endpoint, jsonReq)
+	if err != nil {
+		return nil, err
+	}
 
-	return models.LiteratureList{
+	if err = json.Unmarshal(body, &res); err != nil {
+		return nil, err
+	}
+
+	return &models.LiteratureList{
 		Title:       title,
 		IsContained: res.Found > 0,
 	}, nil

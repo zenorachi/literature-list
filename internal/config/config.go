@@ -1,9 +1,8 @@
 package config
 
 import (
-	"time"
-
 	"github.com/joho/godotenv"
+	"time"
 
 	"github.com/kelseyhightower/envconfig"
 	"github.com/spf13/viper"
@@ -41,28 +40,25 @@ const (
 	ymlFile   = "main"
 )
 
-func init() {
+func New() (*Config, error) {
 	if err := godotenv.Load(envFile); err != nil {
-		//logger.Fatal("config", ".env initialization failed")
+		return nil, err
 	}
 
 	viper.AddConfigPath(directory)
 	viper.SetConfigName(ymlFile)
 	if err := viper.ReadInConfig(); err != nil {
-		//logger.Fatal("config", "viper initialization failed")
+		return nil, err
 	}
-}
 
-func New() *Config {
 	config := &Config{}
-
 	if err := viper.Unmarshal(config); err != nil {
-		//logger.Fatal("viper config", err.Error())
+		return nil, err
 	}
 
 	if err := envconfig.Process("gin", &config.GIN); err != nil {
-		//logger.Fatal("gin config", err.Error())
+		return nil, err
 	}
 
-	return config
+	return config, nil
 }
