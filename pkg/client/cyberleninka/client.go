@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	c "github.com/zenorachi/literature-list/pkg/client"
 	"github.com/zenorachi/literature-list/pkg/client/models"
+	"github.com/zenorachi/literature-list/pkg/logger"
 	"golang.org/x/sync/errgroup"
 	"time"
 )
@@ -37,7 +38,7 @@ func (c *Client) SearchLiterature(endpoint string, literatureList []string) ([]m
 
 	go func() {
 		if err := eg.Wait(); err != nil {
-			//logger.Error(err)
+			logger.Error("handle request error", err)
 		}
 		close(resChan)
 	}()

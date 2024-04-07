@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"github.com/zenorachi/literature-list/internal/config"
 	"github.com/zenorachi/literature-list/internal/models"
 	"github.com/zenorachi/literature-list/pkg/client"
@@ -27,42 +26,18 @@ func New(config *config.Config) *Service {
 }
 
 func (s *Service) SearchLiterature(literatureList []string) ([]models.Literature, error) {
-	var (
-	//result       = make([]models.Literature, len(literatureList))
-	//notFoundList = make([]string, 0)
-	)
-
 	cyberleninkaList, err := s.cyberleninkaClient.SearchLiterature(cmodels.CyberleninkaEndpoint, literatureList)
 	if err != nil {
 		return nil, err
 	}
 
+	result := make([]models.Literature, 0, len(cyberleninkaList))
 	for _, v := range cyberleninkaList {
-		fmt.Printf("Title: %s\nContained: %v\n", v.Title, v.IsContained)
+		result = append(result, models.Literature{
+			Title:       v.Title,
+			IsContained: v.IsContained,
+		})
 	}
 
-	//for _, v := range cyberleninkaList {
-	//	if !v.IsContained {
-	//		notFoundList = append(notFoundList, v.Title)
-	//	} else {
-	//		result = append(result, models.Literature{
-	//			Title:       v.Title,
-	//			IsContained: v.IsContained,
-	//		})
-	//	}
-	//}
-	//
-	//elibraryList, err := s.elibraryClient.SearchLiterature(notFoundList)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//
-	//for _, v := range elibraryList {
-	//	result = append(result, models.Literature{
-	//		Title:       v.Title,
-	//		IsContained: v.IsContained,
-	//	})
-	//}
-
-	return nil, nil
+	return result, nil
 }
