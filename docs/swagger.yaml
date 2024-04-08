@@ -1,0 +1,55 @@
+basePath: /
+definitions:
+  models.Literature:
+    properties:
+      isContained:
+        type: boolean
+      title:
+        type: string
+    type: object
+  utils.Error:
+    properties:
+      detail:
+        type: string
+    type: object
+  v1.searchLiteratureResponse:
+    properties:
+      literature_list:
+        items:
+          $ref: '#/definitions/models.Literature'
+        type: array
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Search literature list by input array of literature.
+  title: Search literature list API
+  version: "1.0"
+paths:
+  /api/v1/literature/search:
+    get:
+      consumes:
+      - application/json
+      description: Search literature list in cyberleninka
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.searchLiteratureResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.Error'
+      summary: Search literature list
+      tags:
+      - literature
+      - search
+schemes:
+- http
+swagger: "2.0"

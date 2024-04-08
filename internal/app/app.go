@@ -13,6 +13,13 @@ import (
 	"syscall"
 )
 
+// @title           Search literature list API
+// @version         1.0
+// @description     Search literature list by input array of literature.
+// @host      		localhost:8080
+// @BasePath  /
+// @schemes   http
+
 func Run() {
 	/* INIT CONFIG */
 	cfg, err := config.New()
