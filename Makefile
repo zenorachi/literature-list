@@ -1,14 +1,10 @@
+IMAGE=literature-list
+
 build:
-	go mod download && CGO_ENABLED=0 GOOS=linux go build -o ./.bin/app ./cmd/app/main.go
+	docker build -t $(IMAGE) .
 
 run: build
-	docker-compose up --remove-orphans
-
-rebuild: build
-	docker-compose up --remove-orphans --build
-
-stop:
-	docker-compose down
+	docker run --publish 8080:8080 $(IMAGE)
 
 lint:
 	golangci-lint run
