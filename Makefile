@@ -1,3 +1,5 @@
+.DEFAULT_GOAL=run
+
 IMAGE=literature-list
 
 .PHONY: build
