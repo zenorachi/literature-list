@@ -1,6 +1,10 @@
 http:
-  host: todo-app
+  host: 127.0.0.1
   port: 8080
   readTimeout: 10s
   writeTimeout: 10s
   shutdownTimeout: 5s
+
+cyberleninkaClient:
+  baseUrl: "https://cyberleninka.ru/"
+  timeout: 10s

@@ -1,7 +1,6 @@
 package config
 
 import (
-	"github.com/joho/godotenv"
 	"time"
 
 	"github.com/kelseyhightower/envconfig"
@@ -41,10 +40,6 @@ const (
 )
 
 func New() (*Config, error) {
-	if err := godotenv.Load(envFile); err != nil {
-		return nil, err
-	}
-
 	viper.AddConfigPath(directory)
 	viper.SetConfigName(ymlFile)
 	if err := viper.ReadInConfig(); err != nil {

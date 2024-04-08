@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/zenorachi/literature-list/api/rest"
 	"github.com/zenorachi/literature-list/api/server"
+	_ "github.com/zenorachi/literature-list/docs"
 	"github.com/zenorachi/literature-list/internal/config"
 	"github.com/zenorachi/literature-list/internal/service"
 	"github.com/zenorachi/literature-list/pkg/logger"
@@ -12,7 +13,13 @@ import (
 	"syscall"
 )
 
-func Run(cfg *config.Config) {
+func Run() {
+	/* INIT CONFIG */
+	cfg, err := config.New()
+	if err != nil {
+		logger.Fatal("error initializing config")
+	}
+
 	/* INIT SERVICES & DEPS */
 	services := service.New(cfg)
 
@@ -32,13 +39,13 @@ func Run(cfg *config.Config) {
 	select {
 	case s := <-quit:
 		logger.Info("app - Run - signal: " + s.String())
-	case err := <-srv.Notify():
+	case err = <-srv.Notify():
 		logger.Error("server", err.Error())
 	}
 
 	/* SHUTTING DOWN */
 	logger.Info("Shutting down...")
-	if err := srv.Shutdown(); err != nil {
+	if err = srv.Shutdown(); err != nil {
 		logger.Error("server", err.Error())
 	}
 }

@@ -9,7 +9,7 @@ import (
 func (h *Handler) initLiteratureRoutes(api *gin.RouterGroup) {
 	literature := api.Group("/literature")
 	{
-		literature.GET("/search")
+		literature.GET("/search", h.searchLiterature)
 	}
 }
 
