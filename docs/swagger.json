@@ -1,0 +1,109 @@
+{
+    "schemes": [
+        "http"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "Search literature list by input array of literature.",
+        "title": "Search literature list API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/api/v1/literature/search": {
+            "get": {
+                "description": "Search literature list in cyberleninka",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "literature",
+                    "search"
+                ],
+                "summary": "Search literature list",
+                "parameters": [
+                    {
+                        "description": "input",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.searchLiteratureRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v1.searchLiteratureResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.Literature": {
+            "type": "object",
+            "properties": {
+                "is_contained": {
+                    "type": "boolean"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "utils.Error": {
+            "type": "object",
+            "properties": {
+                "detail": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.searchLiteratureRequest": {
+            "type": "object",
+            "required": [
+                "literature_list"
+            ],
+            "properties": {
+                "literature_list": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "v1.searchLiteratureResponse": {
+            "type": "object",
+            "properties": {
+                "literature_list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Literature"
+                    }
+                }
+            }
+        }
+    }
+}
