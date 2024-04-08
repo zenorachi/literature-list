@@ -68,7 +68,7 @@ const docTemplate = `{
         "models.Literature": {
             "type": "object",
             "properties": {
-                "isContained": {
+                "is_contained": {
                     "type": "boolean"
                 },
                 "title": {
