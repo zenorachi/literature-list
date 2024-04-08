@@ -12,6 +12,15 @@ definitions:
       detail:
         type: string
     type: object
+  v1.searchLiteratureRequest:
+    properties:
+      literature_list:
+        items:
+          type: string
+        type: array
+    required:
+    - literature_list
+    type: object
   v1.searchLiteratureResponse:
     properties:
       literature_list:
@@ -31,6 +40,13 @@ paths:
       consumes:
       - application/json
       description: Search literature list in cyberleninka
+      parameters:
+      - description: input
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/v1.searchLiteratureRequest'
       produces:
       - application/json
       responses:

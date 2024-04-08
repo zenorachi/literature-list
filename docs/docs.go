@@ -30,6 +30,17 @@ const docTemplate = `{
                     "search"
                 ],
                 "summary": "Search literature list",
+                "parameters": [
+                    {
+                        "description": "input",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.searchLiteratureRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -70,6 +81,20 @@ const docTemplate = `{
             "properties": {
                 "detail": {
                     "type": "string"
+                }
+            }
+        },
+        "v1.searchLiteratureRequest": {
+            "type": "object",
+            "required": [
+                "literature_list"
+            ],
+            "properties": {
+                "literature_list": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },

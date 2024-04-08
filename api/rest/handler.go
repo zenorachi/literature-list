@@ -31,7 +31,7 @@ func (h *Handler) InitRoutes(cfg *config.Config) *gin.Engine {
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"message": "pong"})
 	})
-	router.GET("/docs/*any", ginSwagger.WrapHandler(swagFiles.Handler))
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swagFiles.Handler))
 
 	h.initAPI(router)
 

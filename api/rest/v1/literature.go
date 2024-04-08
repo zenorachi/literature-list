@@ -27,6 +27,7 @@ type searchLiteratureResponse struct {
 // @Tags literature,search
 // @Accept json
 // @Produce json
+// @Param   input body searchLiteratureRequest true "input"
 // @Success 200 {object} searchLiteratureResponse
 // @Failure 400 {object} utils.Error
 // @Failure 500 {object} utils.Error
